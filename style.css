@@ -1,0 +1,1014 @@
+/* =============================================================
+   style.css
+   포트폴리오 전용 스타일시트
+   ─ 구조: 변수 → 리셋 → 커서 → 섹션별 스타일 → 반응형
+   ============================================================= */
+
+
+/* ─────────────────────────────────────────────
+   0. CSS 변수 시스템 (디자인 토큰 중앙 관리)
+      컬러·폰트·이징을 여기서만 수정하면 전체 반영
+   ───────────────────────────────────────────── */
+:root {
+  /* ── 컬러 팔레트 ── */
+  --color-dark:rgba(9,   9,   9,   1);
+  --color-light:rgba(235, 234, 228, 1); 
+  --color-cream:rgba(239, 230, 222, 1);
+  --color-red:rgba(154, 0, 2, 1);
+
+  /* ── 폰트 패밀리 ── */
+  --font-display: 'Anton', sans-serif;       /* 영문 타이틀·강조 */
+  --font-body:    'Noto Sans KR', sans-serif; /* 한글 본문·UI 텍스트 */
+
+  /* ── 커스텀 이징 ── */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+
+/* ─────────────────────────────────────────────
+   1. 전역 리셋 & 기본 스타일
+   ───────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: auto;   /* GSAP과 충돌 방지 — 브라우저 스크롤 애니메이션 끔 */
+  overflow-x: clip;        /* sticky 호환: 가로 클리핑은 유지하되 스크롤 컨테이너 생성 안 함 */
+}
+
+body {
+  background:   var(--color-light);
+  color:        var(--color-dark);
+  font-family:  var(--font-body);
+  overflow-x:   clip;  /* sticky 호환 (scroll container 생성 방지) */
+  cursor:       none; /* 커스텀 커서 사용 → 기본 커서 숨김 */
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+
+/* ─────────────────────────────────────────────
+   2. 커스텀 마우스 커서
+      #cursor         → 작은 채움 원 (빠른 추적)
+      #cursor-follower → 큰 테두리 원 (느린 추적)
+      mix-blend-mode: difference → 배경과 색상 반전 효과
+   ───────────────────────────────────────────── */
+#cursor {
+  position:      fixed;
+  width:         12px;
+  height:        12px;
+  background:    var(--color-dark);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index:       99999;
+  transform:     translate(-50%, -50%);
+  mix-blend-mode: difference;
+  will-change:   transform;
+}
+
+#cursor-follower {
+  position:      fixed;
+  width:         36px;
+  height:        36px;
+  border:        1px solid rgba(9, 9, 9, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index:       99998;
+  transform:     translate(-50%, -50%);
+  mix-blend-mode: difference;
+  opacity:       0.55;
+  will-change:   transform;
+}
+
+
+/* ─────────────────────────────────────────────
+   3. INTRO 섹션
+      - 뷰포트를 완전히 덮는 fixed 레이어
+      - 단일 슬롯에서 단어가 순차 교체 등장
+   ───────────────────────────────────────────── */
+#intro {
+  position:       fixed;
+  inset:          0;               /* top/right/bottom/left: 0 */
+  background:     var(--color-dark);
+  z-index:        1000;
+  display:        flex;
+  align-items:    center;
+  justify-content: center;
+  overflow:       hidden;
+}
+
+/* 단어가 표시되는 단일 슬롯 컨테이너 */
+.intro-slot {
+  text-align: center;
+}
+
+/* overflow:hidden → 글자가 밖으로 튀어나오지 않게 마스킹 */
+.intro-word-wrap {
+  overflow:    hidden;
+  line-height: 1;
+  padding:     0.05em 0;
+}
+
+/* 실제 단어 텍스트 — JS가 textContent를 교체하며 재사용 */
+.intro-word {
+  display:       block;
+  font-family:   var(--font-display);
+  font-size:     clamp(3.5rem, 13vw, 12rem);
+  color:         var(--color-light);
+  letter-spacing: -0.02em;
+  line-height:   1;
+  transform:     translateY(110%); /* 초기 상태: 아래에 숨김 */
+  will-change:   transform;
+}
+
+
+/* ─────────────────────────────────────────────
+   4. MAIN 섹션
+      - sticky 구조 → 스크롤 시 화면 고정 효과
+      - CREATIVE PUBLISHER 타이틀 + 하단 이름 레이아웃
+   ───────────────────────────────────────────── */
+#main {
+  position:   sticky;            /* 스크롤 시 화면 상단에 고정(Pin) */
+  top:        0;
+  height:     100vh;             /* 핀 제거 → 일반 풀스크린 히어로 */
+  background: var(--color-cream);
+  overflow:   hidden;
+  z-index:    1;                 /* 뒤따르는 섹션들이 위로 덮어쓰도록 최하단 */
+}
+
+/* 뷰포트 컨테이너 (sticky 제거 → 이중 핀 충돌 해소) */
+.main-inner {
+  position:       relative;
+  height:         100vh;
+  width:          100%;
+  overflow:       hidden;
+  display:        flex;
+  align-items:    center;
+  justify-content: center;
+}
+
+
+/* "CREATIVE PUBLISHER" 타이틀 감싸개 */
+.main-title-wrap {
+  position:  absolute;
+  top:       50%;
+  left:      50%;
+  transform: translate(-50%, -50%);
+  width:     100%;
+  padding-top: 8vh;
+  text-align: center;
+  z-index:   10;
+}
+
+/* 타이틀 flex 컨테이너 — 글자 단위 span이 들어감 */
+.main-title {
+  font-family:    var(--font-display);
+  font-size:      clamp(2rem, 11.5vw, 14rem);
+  color:          var(--color-dark);
+  letter-spacing: -0.02em;
+  white-space:    nowrap;
+  display:        flex;
+  justify-content: center;
+  align-items:    center;
+  flex-wrap:      wrap;
+}
+
+/* ── 글자 플립 컨테이너 ──
+   overflow:hidden → 위·아래 글자 중 하나만 보임 */
+.letter-flip {
+  display:  inline-block;
+  overflow: hidden;
+  height:   1em;
+  padding: 0 0.03em;
+  cursor:   default;
+}
+
+/* 위·아래 두 글자를 세로로 쌓은 래퍼 */
+.letter-flip-inner {
+  display:        flex;
+  flex-direction: column;
+  will-change:    transform;
+}
+
+.letter-flip-inner span {
+  display:     block;
+  height:      1em;
+  line-height: 1;
+}
+
+/* 기본(검정) 글자 */
+.letter-flip-inner .char-default {
+  color: var(--color-red);
+}
+
+/* 호버 시 올라오는 포인트 컬러 글자 */
+.letter-flip-inner .char-hover {
+  color: #fcfbf9;
+  -webkit-text-stroke: 1px var(--color-red);
+}
+
+/* 단어 사이 공백 처리 */
+.letter-space {
+  display: inline-block;
+  width:   0.3em;
+}
+
+/* ── 하단 이름 레이아웃: 좌(KIM) · 중앙 이미지 · 우(JEONG YEON) ── */
+.bottom-layout {
+  position:        absolute;
+  bottom:          8vh;
+  left:            0;
+  right:           0;
+  z-index:         10;
+  display:         flex;
+  align-items:     flex-end;
+  justify-content: space-between;   /* 두 이름을 양 끝으로 분리 */
+  padding:         0 3.6vw;
+  gap:             2vw;
+}
+
+/* 좌·우 이름 공통 */
+.name-left,
+.name-right {
+  position:       relative;
+  z-index:        2;               /* 중앙 이미지보다 위 → 텍스트 가독성 */
+  font-family:    var(--font-display);
+  font-size:      clamp(5.5rem, 8vw, 9rem);
+  line-height:    0.9;
+  color:          var(--color-red);
+  opacity:        0;               /* 초기 숨김 → JS가 fadein */
+  will-change:    opacity, transform;
+  white-space:    nowrap;
+}
+.name-left  { text-align: left; }
+.name-right { text-align: right; }
+
+/* ── 중앙 이미지 ──
+   .bottom-layout(position:absolute) 박스를 기준으로 배치:
+   · left:50% + (JS의 xPercent:-50)  → 화면 수평 정중앙
+   · bottom:0                        → .bottom-layout 하단(이름 베이스라인)과 y축 일치
+   · width:clamp(...) + aspect-ratio → 화면 크기에 따른 반응형
+   ※ 수평 중앙 이동(translateX -50%)은 JS의 xPercent로 처리해
+     등장/호버 트랜스폼과 충돌하지 않게 함 */
+.center-image {
+  position:       absolute;
+  left:           50%;
+  bottom:         0;
+    width: clamp(500px, 38vw, 1180px);
+    aspect-ratio: 4 / 3.04;
+  z-index:        1;
+  opacity:        0;               /* 초기 숨김 → JS가 슬라이드업+페이드 */
+  will-change:    transform, opacity;
+}
+
+/* 두 장의 이미지를 같은 자리에 겹쳐 쌓아 교차 페이드 */
+.center-image .ci-img {
+  position:     absolute;
+  inset:        0;
+  width:        100%;
+  height:       100%;
+  object-fit:   cover;
+  transition:   opacity 0.55s var(--ease-out-quart);
+  backface-visibility: hidden;
+}
+
+/* 평상시: 기본 이미지만 노출, 호버 이미지는 숨김 */
+.ci-img--hover { opacity: 0; }
+
+/* 호버: 위치 변화 없이 제자리에서 두 번째 이미지로 자연스럽게 교체 */
+.center-image:hover .ci-img--default { opacity: 0; }
+.center-image:hover .ci-img--hover   { opacity: 1; }
+
+/* 모바일(터치): hover가 없으므로 JS가 스크롤 시 .img-swapped를 부여 →
+   hover와 동일한 교차 페이드로 두 번째 이미지를 노출 */
+.center-image.img-swapped .ci-img--default { opacity: 0; }
+.center-image.img-swapped .ci-img--hover   { opacity: 1; }
+
+
+
+/* ─────────────────────────────────────────────
+   5. ABOUT 섹션 — 가로 슬라이드 3패널
+   ───────────────────────────────────────────── */
+#about {
+  position:   relative;
+  background: var(--color-red);
+  overflow:   hidden;
+  z-index:    2;                 /* sticky #main 위로 슬라이드 업 */
+}
+
+/* 뷰포트 고정 래퍼 (pin 시 이 크기로 고정) */
+.about-track-wrapper {
+  width:    100%;
+  height:   100vh;
+  overflow: hidden;
+}
+
+/* 3패널 가로 트랙 (300vw) — JS가 x 방향으로 이동 */
+.about-track {
+  display:      flex;
+  width:        300vw;
+  height:       100%;
+  will-change:  transform;
+}
+
+/* 개별 패널 */
+.about-panel {
+  width:           100vw;
+  height:          100%;
+  flex-shrink:     0;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         6vw;
+  position:        relative;
+}
+.about-panel.about-panel-first {
+  justify-content: space-between;
+  gap: 6vw;
+}
+/* ── 패널 1: About & Profile ── */
+.about-p1-img{
+    position: relative; 
+    height: 100%;
+    padding: 26px;
+    background: var(--color-cream);}
+.about-p1-main{    width: 100%; height: 100%;
+    object-fit: cover;}
+
+.about-p1-deco{
+    position: absolute;
+    width: 140px; 
+    height: auto;
+    z-index: 2;
+    opacity: 0;        
+    will-change: transform, opacity;
+}
+.about-p1-deco--tl{ top: 16px;    left: 16px; width: 5rem; }
+.about-p1-deco--br{ bottom: 16px; right: 16px; width: 7rem; }
+
+.about-p1-title {
+  font-family:    var(--font-display);
+  font-size:      clamp(4rem, 13vw, 10rem);
+  color:          var(--color-cream);
+  line-height:    1;
+}
+
+.about-p1-sub {
+  margin-top: 3rem;
+}
+
+.about-p1-sub .name-en {
+  font-family:    var(--font-display);
+  font-size:      clamp(1.2rem, 3vw, 2.5rem);
+  color:          var(--color-light);
+  letter-spacing: 0.05em;
+}
+
+.about-p1-sub .birth {
+  font-family:    var(--font-body);
+  font-size:      clamp(0.78rem, 1.5vw, 1rem);
+  color:          rgba(238, 233, 209, 0.5);
+  margin-top:     0.5rem;
+  letter-spacing: 0.1em;
+}
+
+/* ── 패널 2: Design Translator ── */
+.about-p2-inner {
+  text-align: center;
+  max-width:  800px;
+}
+
+.about-p2-kicker {
+  font-family:    var(--font-body);
+  font-size:      clamp(0.72rem, 1.2vw, 0.9rem);
+  color:          rgba(238, 233, 209, 0.5);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom:  1.5rem;
+  opacity:        0;
+}
+
+.about-p2-headline {
+  font-family:    var(--font-display);
+  font-size:      clamp(3rem, 9vw, 10rem);
+  color:          var(--color-cream);
+  line-height:    1;
+  opacity:        0;
+}
+
+.about-p2-desc {
+  font-family: var(--font-body);
+  font-size:   clamp(0.85rem, 1.5vw, 1.05rem);
+  color:       rgba(238, 233, 209, 0.7);
+  line-height: 1.9;
+  margin-top:  2rem;
+  opacity:     0;
+}
+
+/* ── 패널 3: 기술 스택 ── */
+.about-p3-inner {
+  max-width: 1100px;
+  width:     100%;
+}
+
+.about-p3-title {
+  font-family:    var(--font-display);
+  font-size:      clamp(2rem, 5vw, 5rem);
+  color:          var(--color-cream);
+  margin-bottom:  2.5rem;
+  opacity:        0;
+}
+
+/* 스킬 박스 그리드 — 제목 아래 5개 박스만 배치 */
+#skillList {
+  display:               grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:                   clamp(0.7rem, 1.4vw, 1.1rem);
+}
+
+/* 개별 스킬 박스 */
+.skill-box {
+  position:        relative;
+  aspect-ratio:    3 / 4; 
+  --fold:          clamp(20px, 1.7vw, 30px);
+  border:          2px solid rgba(238, 233, 209, 0.22);
+  background:      rgba(238, 233, 209, 0.05);
+  border-radius:   9px; 
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--fold)) 0,
+    100% var(--fold),
+    100% 100%,
+    0 100%
+  );
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         1rem;
+  overflow:        hidden;
+  transition:      border-color 0.4s var(--ease-out-quart),
+                   background   0.4s var(--ease-out-quart);
+}
+
+/* ── 접힌 모서리(folded flap) ──
+   깎인 컷 라인을 빗변으로 삼는 삼각형. 종이가 안쪽으로 접힌 면을 표현.
+   살짝 밝은 그라데이션 + 그림자로 접힌 입체감 부여 */
+.skill-box::after {
+  content:        '';
+  position:       absolute;
+  top:            0;
+  right:          0;
+  width:          var(--fold);
+  height:         var(--fold);
+  background:     linear-gradient(135deg,
+                    rgba(238, 233, 209, 0.30),
+                    rgba(238, 233, 209, 0.12));
+  clip-path:      polygon(0 0, 100% 100%, 0 100%);
+  filter:         drop-shadow(-1px 1px 1.5px rgba(9, 9, 9, 0.35));
+  transition:     background 0.4s var(--ease-out-quart);
+}
+
+.skill-box:hover {
+  border-color: var(--color-cream);
+  background:   rgba(238, 233, 209, 0.1);
+}
+
+
+.skill-box:hover::after {
+  background: linear-gradient(135deg,
+                var(--color-cream),
+                rgba(238, 233, 209, 0.45));
+}
+
+
+.skill-swipe-hint {
+  display:        none;
+  align-items:    center;
+  justify-content: flex-end;
+  gap:            0.45rem;
+  margin-top:     0.9rem;
+  font-family:    var(--font-body);
+  font-size:      0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color:          rgba(238, 233, 209, 0.6);
+  transition:     opacity 0.5s var(--ease-out-quart);
+}
+.skill-swipe-hint.is-hidden {  
+  opacity:        0;
+  pointer-events: none;
+}
+.skill-swipe-hint .swipe-arrow {
+  animation: swipeNudge 1.4s ease-in-out infinite;
+}
+@keyframes swipeNudge {
+  0%, 100% { transform: translateX(0);   opacity: 0.55; }
+  50%      { transform: translateX(6px); opacity: 1;    }
+}
+
+
+.skill-label {
+  font-family:    var(--font-display);
+  font-size:      clamp(1rem, 1.9vw, 1.7rem);
+  color:          var(--color-cream);
+  letter-spacing: 0.01em;
+  text-align:     center;
+  transition:     opacity   0.4s var(--ease-out-quart),
+                  transform 0.4s var(--ease-out-quart);
+}
+
+
+.skill-desc {
+  position:        absolute;
+  inset:           0;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         clamp(0.9rem, 1.4vw, 1.4rem);
+  font-family:     var(--font-body);
+  font-size:       clamp(0.62rem, 0.82vw, 0.8rem);
+  font-weight:     300;
+  line-height:     1.75;
+  color:           rgba(238, 233, 209, 0.88);
+  text-align:      center;
+  opacity:         0;
+  transform:       translateY(8px);
+  transition:      opacity   0.45s var(--ease-out-quart),
+                   transform 0.45s var(--ease-out-quart);
+  pointer-events:  none;
+  word-break: keep-all;
+}
+
+.skill-box:hover .skill-label {
+  opacity:   0;
+  transform: translateY(-8px);
+}
+.skill-box:hover .skill-desc {
+  opacity:   1;
+  transform: translateY(0);
+}
+
+
+/* ─────────────────────────────────────────────
+   6. PROJECTS 섹션 — 가로 트랙 카드 슬라이드
+   ───────────────────────────────────────────── */
+#projects {
+  position:   relative;
+  background: var(--color-cream);
+  overflow:   hidden;
+  z-index:    3;  
+}
+
+/* pin 고정 래퍼 */
+.projects-pin-wrapper {
+  width:    100%;
+  height:   100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 배경 거대 타이틀 (패럴랙스) */
+.projects-bg-title {
+  position:       absolute;
+  top:            50%;
+  left:           50%;
+  transform:      translate(-50%, -50%);
+  font-family:    var(--font-display);
+  font-size:      clamp(5rem, 18vw, 18rem);
+  color:          rgba(9, 9, 9, 0.04);
+  letter-spacing: -0.04em;
+  white-space:    nowrap;
+  pointer-events: none;
+  will-change:    transform;
+  z-index:        0;
+}
+
+
+
+/* 카드 가로 트랙 */
+.cards-track {
+  position:    absolute;
+  top:         0;
+  left:        0;
+  height:      100%;
+  display:     flex;
+  align-items: center;
+  padding:     0 6vw;
+  gap:         clamp(1.5rem, 3vw, 3rem);
+  will-change: transform;
+  z-index:     1;
+}
+
+/* ── 개별 카드 ── */
+.project-card {
+  flex:            0 0 auto;
+  width:           clamp(260px, 30vw, 1000px);
+  background:     var(--color-red);
+  overflow:        hidden;
+  display:         flex;
+  flex-direction:  column;
+ border: 5px solid var(--color-red);
+  transition:      border-color 0.3s;
+}
+
+
+
+/* 카드 썸네일 */
+.card-thumb {
+  width:        100%;
+  aspect-ratio: 4 / 3;
+  overflow:     hidden;
+  background:   #e0e0e0;
+}
+
+.card-thumb img {
+  width:       100%;
+  height:      100%;
+  object-fit:  cover;
+  transition:  transform 0.6s var(--ease-out-quart);
+  will-change: transform;
+}
+
+/* 호버 시 썸네일 살짝 확대 (패럴랙스 효과) */
+.project-card:hover .card-thumb img {
+  transform: scale(1.06);
+}
+
+/* 카드 본문 */
+.card-body {
+  padding:        clamp(1rem, 2vw, 1.5rem);
+  display:        flex;
+  flex-direction: column;
+  gap:            0.6rem;
+  flex:           1;
+}
+
+
+.card-title {
+  font-family:    var(--font-display);
+  font-size:      clamp(1.4rem, 2.2vw, 1.6rem);
+  color:          var(--color-cream);
+  line-height:    1.1;
+  letter-spacing: 0.8px;
+  font-weight: 500;
+}
+
+.card-meta {
+  font-family: var(--font-body);
+  font-size:   0.72rem;
+  color:       var(--color-light);
+  display:     flex;
+  gap:         1rem;
+}
+
+/* 기술 스택 배지들 */
+.card-stack {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         0.4rem;
+}
+
+.stack-tag {
+  font-family:    var(--font-body);
+  font-size:      0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding:        0.22rem 0.55rem;
+  border:         1px solid var(--color-light);
+  color:          var(--color-light);
+}
+
+/* 카드 링크 버튼 — 크림 솔리드 버튼 / hover 시 반전 + 화살표 이동 */
+.card-link {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             0.6rem;
+  width:           100%;
+  margin-top:      1rem;
+  padding:         0.72rem 1.05rem;
+  font-family:     var(--font-body);
+  font-size:       0.72rem;
+  font-weight:     500;
+  letter-spacing:  0.14em;
+  text-transform:  uppercase;
+  text-decoration: none;
+  color:           var(--color-red);
+  background:      var(--color-cream);
+  border:          1px solid var(--color-cream);
+  border-radius:   4px;
+  transition:      background 0.35s var(--ease-out-quart),
+                   color      0.35s var(--ease-out-quart);
+}
+
+/* 화살표 — 평상시 정지, hover 시 살짝 우측 이동 */
+.card-link-arrow {
+  display:    inline-block;
+  transition: transform 0.35s var(--ease-out-quart);
+}
+
+.card-link:hover {
+  background: transparent;
+  color:      var(--color-cream);
+}
+
+.card-link:hover .card-link-arrow {
+  transform: translateX(5px);
+}
+
+
+/* ─────────────────────────────────────────────
+   7. CONTACT 섹션
+   ───────────────────────────────────────────── */
+#contact {
+  position:        relative;
+  background:      var(--color-cream);
+  min-height:      100vh;
+  overflow:        hidden;
+  z-index:         4; 
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  padding:         clamp(3rem, 8vh, 6rem) 6vw;
+}
+
+/* ── 무한 마퀴 배경 텍스트 레이어 (순수 CSS · seamless) ── */
+.marquee-wrapper {
+  position:        absolute;
+  inset:           0; 
+  pointer-events:  none;
+  overflow:        hidden;
+  display:         flex;
+  flex-direction:  column;
+  justify-content: space-between;
+}
+
+/* 마퀴 행 — 트랙을 담는 뷰포트 역할 */
+.marquee-row {
+  display:     flex;
+  overflow:    hidden;
+  white-space: nowrap;
+}
+
+/* 실제로 흐르는 트랙: 동일 세트 2벌이 이어져 translateX(-50%)에서 seamless */
+.marquee-track {
+  display:     flex;
+  flex-shrink: 0;
+  width:       max-content;
+  will-change: transform;            /* GPU 합성 힌트 → 성능 최적화 */
+}
+
+/* 왼쪽으로 흐름 (0 → -50%) */
+.marquee-track--left {
+  animation: marquee-left 150s linear infinite;
+}
+
+/* 오른쪽으로 흐름 (-50% → 0) */
+.marquee-track--right {
+  animation: marquee-right 150s linear infinite;
+}
+
+
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes marquee-right {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+/* 모션 최소화 선호 사용자는 애니메이션 정지 */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
+
+/* 마퀴 텍스트 — 거의 투명한 거대 타이틀 */
+.marquee-text {
+  font-family:    var(--font-display);
+  font-size:      clamp(3rem, 8vw, 7rem);
+  color:          rgba(9, 9, 9, 0.04);
+  letter-spacing: -0.02em;
+  word-spacing:   0.12em;          /* 단어 사이 여백 */
+  flex-shrink:    0;
+  line-height: 1;
+  padding-right:  clamp(2.5rem, 6vw, 6rem);  /* 반복 구절 사이 여백 */
+}
+
+/* ── 콘텐츠 영역 ── */
+.contact-inner {
+  position:   relative;
+  z-index:    2;
+  text-align: center;
+  width:      100%;
+  max-width:  900px;
+}
+
+/* 메인 CTA 타이틀 — 줄 단위 마스크 상승 등장 (clip-mask reveal) */
+.contact-headline {
+  font-family: var(--font-display);
+  font-size:   clamp(3rem, 9vw, 9rem);
+  color:       var(--color-dark);
+  line-height: 1;
+  opacity:     1;
+  transform:   none;
+}
+
+/* 각 줄을 감싸는 마스크 — overflow:hidden 으로 클립 */
+.ch-mask {
+  display:        block;
+  overflow:       hidden;
+  padding-bottom: 0.08em;   /* 디센더/하단 글리프 잘림 방지 여유 */
+}
+
+/* 마스크 안에서 아래에서 위로 떠오르는 실제 텍스트 */
+.ch-line {
+  display:     inline-block;
+  transform:   translateY(110%);   /* 처음엔 마스크 아래에 숨김 */
+  opacity:     0;
+  will-change: transform, opacity;
+  transition:  transform 0.95s var(--ease-out-quart),
+               opacity   0.95s var(--ease-out-quart);
+}
+
+/* IntersectionObserver가 추가하는 클래스 → 도착 상태 (위로 상승) */
+.contact-headline.is-visible .ch-line {
+  transform: translateY(0);
+  opacity:   1;
+}
+
+/* 줄마다 시차(stagger)로 순차 상승 */
+.contact-headline.is-visible .ch-mask:nth-child(1) .ch-line { transition-delay: 0.05s; }
+.contact-headline.is-visible .ch-mask:nth-child(2) .ch-line { transition-delay: 0.17s; }
+.contact-headline.is-visible .ch-mask:nth-child(3) .ch-line { transition-delay: 0.29s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ch-line { transition: opacity 0.4s ease; transform: none; }
+}
+
+/* 구분선 */
+.contact-divider {
+  width:      40px;
+  height:     1px;
+  background: rgba(9, 9, 9, 0.2);
+  margin:     2.5rem auto;
+  opacity:    0;
+}
+
+/* 이메일 자석 링크 */
+.email-magnetic {
+  display:         inline-block;
+  font-family:     var(--font-display);
+  font-size:       clamp(1.2rem, 3.5vw, 3rem);
+  color:           var(--color-dark);
+  text-decoration: none;
+  position:        relative;
+  letter-spacing:  -0.01em;
+  opacity:         0;
+  transform:       translateY(30px);
+  transition:      color 0.3s;
+}
+
+/* 밑줄 드로우 애니메이션 — scaleX(0→1) */
+.email-magnetic::after {
+  content:          '';
+  position:         absolute;
+  bottom:           -4px;
+  left:             0;
+  width:            100%;
+  height:           1px;
+  background:       var(--color-red);
+  transform:        scaleX(0);
+  transform-origin: left center;
+  transition:       transform 0.45s var(--ease-out-quart);
+}
+
+.email-magnetic:hover {
+  color: var(--color-red);
+}
+
+.email-magnetic:hover::after {
+  transform: scaleX(1);
+}
+
+/* 푸터 카피라이트 */
+.contact-footer {
+  position:       absolute;
+  bottom:         clamp(1.2rem, 3vh, 2rem);
+  left:           0;
+  right:          0;
+  text-align:     center;
+  font-family:    var(--font-body);
+  font-size:      0.68rem;
+  letter-spacing: 0.1em;
+  color:          rgba(9, 9, 9, 0.22);
+  text-transform: uppercase;
+}
+
+
+/* ─────────────────────────────────────────────
+   8. 반응형 미디어 쿼리
+   ───────────────────────────────────────────── */
+
+/* 태블릿 이하 (≤ 768px) */
+@media (max-width: 768px) {
+  .main-title {
+    font-size: clamp(1.6rem, 20.5vw, 8rem);
+  }
+  .main-title .letter-space {
+    width: 100%;
+    height: 0; /* 세로 여백이 너무 벌어지지 않도록 조절 */
+  }
+  .bottom-layout {
+    padding: 0 4vw;
+    bottom:  4vh;
+  }
+
+  .name-left,
+  .name-right {
+    font-size: clamp(2.5rem, 10vw, 5rem);
+  }
+
+  .center-image {
+    width: clamp(400px, 55vw, 600px);
+  }
+
+  .about-panel {
+    padding: 4vw;
+  }
+
+  /* 스킬 박스: 모바일에서도 세로 직사각형 유지 + 가로 스크롤(옆으로 이동) */
+  #skillList {
+    display:                flex;
+    flex-wrap:              nowrap;
+    overflow-x:             auto;
+    overflow-y:             visible;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type:       x proximity;
+    gap:                    0.9rem;
+    padding-bottom:         0.6rem;        /* 스크롤 여백 */
+    scrollbar-width:        none;          /* 스크롤바 숨김 (Firefox) */
+  }
+  #skillList::-webkit-scrollbar { display: none; }  /* 스크롤바 숨김 (Webkit) */
+
+  .skill-box {
+    flex:              0 0 auto;
+    width:             clamp(115px, 34vw, 175px); /* 한 화면에 약 2.5개 보이도록(스와이프 암시) */
+    aspect-ratio:      3 / 4;              /* 세로 직사각형 유지 */
+    scroll-snap-align: start;
+  }
+  /* 마지막 박스 가로 와이드 처리 해제 → 직사각형 통일 */
+  .skill-box:last-child {
+    grid-column:  auto;
+    aspect-ratio: 3 / 4;
+  }
+
+  /* 스와이프 가능 구간에서만 힌트 노출 */
+  .skill-swipe-hint {
+    display: flex;
+  }
+
+  .cards-track {
+    padding: 0 4vw;
+  }
+
+  .project-card {
+    width: clamp(220px, 75vw, 320px);
+  }
+
+  .social-list {
+    gap:       1rem;
+    flex-wrap: wrap;
+  }
+  .about-p1-img{display: none;}
+}
+
+/* 소형 모바일 (≤ 480px) */
+@media (max-width: 480px) {
+
+  .letter-flip {
+    height: 1em;
+  }
+
+  .about-p1-title {
+    font-size: clamp(3rem, 16vw, 6rem);
+  }
+
+  .contact-headline {
+    font-size: clamp(2.5rem, 12vw, 5rem);
+  }
+
+  .center-image {
+    width: clamp(318px, 85vw, 450px);
+  }
+}

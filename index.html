@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JEONG YEON KIM — Creative Publisher</title>
+
+  <!-- ① Google Fonts: Anton(영문 디스플레이) + Noto Sans KR(한글 본문) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- ② 스타일시트 연결 -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- =============================================
+       커스텀 마우스 커서 (두 레이어 구조)
+       ============================================= -->
+  <div id="cursor"></div>
+  <div id="cursor-follower"></div>
+
+
+  <!-- =============================================
+       섹션 1: INTRO
+       - 검은 배경 풀스크린 오버레이
+       - JS가 .intro-word 요소를 동적으로 생성·애니메이션
+       - 글자들이 한 자리(중앙)에서 순차 교체 등장
+       ============================================= -->
+  <div id="intro" aria-label="인트로 오프닝 애니메이션">
+    <!-- 단어가 보여지는 단일 슬롯 -->
+    <div class="intro-slot">
+      <div class="intro-word-wrap">
+        <span class="intro-word" id="introWord"></span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =============================================
+       섹션 2: MAIN
+       - sticky 구조로 스크롤 시 화면 고정
+       - "CREATIVE PUBLISHER" 글자 플립 호버
+       - KIM / 이미지 / JEONGYEON 스크롤 수렴
+       ============================================= -->
+  <section id="main">
+    <div class="main-inner">
+
+      <!-- 메인 타이틀: JS로 글자 단위 플립 구조 생성 -->
+      <div class="main-title-wrap" id="mainTitleWrap">
+        <h1 class="main-title" id="mainTitle" aria-label="CREATIVE PUBLISHER">
+          <!-- JS가 letter-flip span 구조를 주입 -->
+        </h1>
+      </div>
+
+      <!-- 하단 이름 레이아웃: 좌(KIM) · 중앙 이미지 · 우(JEONG YEON) -->
+      <div class="bottom-layout">
+        <div class="name-left" id="nameLeft">KIM</div>
+
+        <!-- 중앙 이미지 (절대 위치로 화면 중앙 정렬 · 두 장 교차 호버) -->
+        <div class="center-image" id="centerImage">
+          <img class="ci-img ci-img--default" src="character.png"  alt="김정연 프로필 이미지">
+          <img class="ci-img ci-img--hover"   src="character_hover.png" alt="김정연 프로필 이미지 (호버)">
+        </div>
+
+        <div class="name-right" id="nameRight">JEONG YEON</div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       섹션 3: ABOUT (가로 슬라이드 · 3패널)
+       패널1: About + Profile
+       패널2: Design Translator (강점)
+       패널3: 기술 스택 (Crafting the Web)
+       ============================================= -->
+  <section id="about" aria-label="어바웃 소개">
+    <div class="about-track-wrapper">
+      <div class="about-track" id="aboutTrack">
+
+        <!-- 패널 1 ─ About & Profile -->
+        <div class="about-panel about-panel-first">
+          <div class="about-p1-tit">
+            <h2 class="about-p1-title" id="aboutTitle">
+              ABOUT<br>THE<br>PUBLISHER
+            </h2>
+            <div class="about-p1-sub" id="aboutSub">
+              <div class="name-en">JEONG YEON KIM</div>
+              <div class="birth">Born in 1995.06.22 · Incheon, Korea</div>
+            </div>
+          </div>
+          <div class="about-p1-img" id="aboutImg">
+            <img class="about-p1-main" src="jungyeon.png" alt="정연">
+            <img class="about-p1-deco about-p1-deco--tl" src="deco-1.png" alt="">
+            <img class="about-p1-deco about-p1-deco--br" src="deco-2.png" alt="">
+          </div>
+        </div>
+
+        <!-- 패널 2 ─ Design Translator -->
+        <div class="about-panel">
+          <div class="about-p2-inner">
+            <div class="about-p2-kicker"  id="p2Kicker">Core Strength</div>
+            <h2 class="about-p2-headline" id="p2Headline">DESIGN<br>TRANSLATOR</h2>
+            <p class="about-p2-desc"      id="p2Desc">
+              디자이너의 시각적 언어를<br>
+              완벽한 코드로 번역하는 퍼블리셔, 김정연입니다.<br>
+              단순한 마크업을 넘어 크리에이티브의 의도를<br>
+              화면 위에 온전히 실현합니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- 패널 3 ─ 기술 스택 -->
+        <div class="about-panel">
+          <div class="about-p3-inner">
+            <h2 class="about-p3-title" id="p3Title">CRAFTING<br>THE WEB</h2>
+
+            <!-- 스킬 박스 5개 · 평상시 스킬명 / 호버 시 설명 교차 -->
+            <div id="skillList">
+              <div class="skill-box">
+                <span class="skill-label">HTML5</span>
+                <p class="skill-desc">웹 접근성과 웹 표준 준수를 위해 시맨틱 태그를 사용하며, 누구나 이해할 수 있고 유지보수가 용이한 마크업을 지향합니다.</p>
+              </div>
+              <div class="skill-box">
+                <span class="skill-label">CSS3</span>
+                <p class="skill-desc">Flexbox와 Grid 기반의 반응형 레이아웃과 정교한 애니메이션으로, 디자인 시안을 픽셀 단위까지 화면에 구현합니다.</p>
+              </div>
+              <div class="skill-box">
+                <span class="skill-label">JavaScript</span>
+                <p class="skill-desc">바닐라 자바스크립트로 동작 원리를 이해하고, 사용자 경험을 끌어올리는 인터랙션을 직접 설계하고 구현합니다.</p>
+              </div>
+              <div class="skill-box">
+                <span class="skill-label">jQuery</span>
+                <p class="skill-desc">실무에서 검증된 jQuery로 DOM 제어와 이벤트 처리를 빠르고 안정적으로 다루며, 크로스 브라우징까지 고려합니다.</p>
+              </div>
+              <div class="skill-box">
+                <span class="skill-label">Cafe24</span>
+                <p class="skill-desc">카페24 쇼핑몰 플랫폼의 구조를 이해하고, 모듈과 커스터마이징을 활용해 운영에 최적화된 화면을 구축합니다.</p>
+              </div>
+            </div>
+
+            <!-- 가로 스와이프 힌트 (모바일에서만 노출 · 첫 스와이프 후 숨김) -->
+            <div class="skill-swipe-hint" id="skillSwipeHint" aria-hidden="true">
+              <span>Swipe</span>
+              <svg class="swipe-arrow" width="24" height="10" viewBox="0 0 24 10" fill="none">
+                <path d="M1 5h20M17 1l5 4-5 4" stroke="currentColor" stroke-width="1.5"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.about-track -->
+    </div><!-- /.about-track-wrapper -->
+  </section>
+
+
+  <!-- =============================================
+       섹션 4: PROJECTS (가로 트랙 카드 슬라이드)
+       ============================================= -->
+  <section id="projects" aria-label="선택된 프로젝트">
+    <div class="projects-pin-wrapper" id="projectsWrapper">
+
+      <!-- 배경 거대 타이틀 (패럴랙스) -->
+      <div class="projects-bg-title" id="projectsBgTitle">SELECTED PROJECTS</div>
+
+
+      <!-- 가로 스크롤 카드 트랙 -->
+      <div class="cards-track" id="cardsTrack">
+
+        <!-- 카드 1 -->
+        <article class="project-card">
+          <div class="card-thumb">
+            <img src="project-img01.png" alt="그로운알케미스트 프로젝트 썸네일" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-stack">
+              <span class="stack-tag">Cafe24</span>
+            </div>
+            <h3 class="card-title">GROWN ALCHEMIST</h3>
+            <div class="card-meta">
+              <span>4주</span>
+              <span>기여도 100%</span>
+            </div>
+            <a href="https://grownalchemist.co.kr/" class="card-link" target="_blank">View Project <span class="card-link-arrow">→</span></a>
+          </div>
+        </article>
+
+        <!-- 카드 2 -->
+        <article class="project-card">
+          <div class="card-thumb">
+            <img src="project-img02.png" alt="올리비아로렌 프로젝트 썸네일" loading="lazy">
+          </div>        
+          <div class="card-body">
+            <div class="card-stack">
+              <span class="stack-tag">Cafe24</span>
+            </div>              
+            <h3 class="card-title">OVLR</h3>
+            <div class="card-meta">
+              <span>4주</span>
+              <span>기여도 100%</span>
+            </div>
+            <a href="https://ovlr.kr/" class="card-link" target="_blank">View Project <span class="card-link-arrow">→</span></a>
+          </div>
+        </article>
+
+        <!-- 카드 3 -->
+        <article class="project-card">
+          <div class="card-thumb">
+            <img src="project-img03.png" alt="어바웃톤 프로젝트 썸네일" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-stack">
+              <span class="stack-tag">Cafe24</span>
+            </div>
+            <h3 class="card-title">ABOUT-TONE</h3>
+            <div class="card-meta">
+              <span>3주</span>
+              <span>기여도 100%</span>
+            </div>
+            <a href="https://about-tone.com/" class="card-link" target="_blank">View Project <span class="card-link-arrow">→</span></a>
+          </div>
+        </article>
+
+        <!-- 카드 4 -->
+        <article class="project-card">
+          <div class="card-thumb">
+            <img src="project-img04.png" alt="브리오신 프로젝트 썸네일" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-stack">
+              <span class="stack-tag">Cafe24</span>
+            </div>            
+            <h3 class="card-title">BRIOCHIN</h3>
+            <div class="card-meta">
+              <span>6주</span>
+              <span>기여도 100%</span>
+            </div>
+            <a href="https://briochin.co.kr/" class="card-link" target="_blank">View Project <span class="card-link-arrow">→</span></a>
+          </div>
+        </article>
+
+        <!-- 카드 5 -->
+        <article class="project-card">
+          <div class="card-thumb">
+            <img src="project-img05.png" alt="AHRES 프로젝트 썸네일" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-stack">
+              <span class="stack-tag">Cafe24</span>
+            </div>            
+            <h3 class="card-title">AHRES</h3>
+            <div class="card-meta">
+              <span>3주</span>
+              <span>기여도 100%</span>
+            </div>
+            <a href="https://ahres.co.kr/" class="card-link" target="_blank" >View Project <span class="card-link-arrow">→</span></a>
+          </div>
+        </article>
+
+        <!-- 카드 6 -->
+        <article class="project-card">
+          <div class="card-thumb">
+            <img src="project-img06.png" alt="ADLV 프로젝트 썸네일" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-stack">
+              <span class="stack-tag">Cafe24</span>
+            </div>            
+            <h3 class="card-title">ADLV</h3>
+            <div class="card-meta">
+              <span>4주</span>
+              <span>기여도 100%</span>
+            </div>
+            <a href="https://ecudemo336527.cafe24.com/" class="card-link" target="_blank" >View Project <span class="card-link-arrow">→</span></a>
+          </div>
+        </article>
+
+        <!-- 카드 7 -->
+        <article class="project-card">
+          <div class="card-thumb">
+            <img src="project-img07.png" alt="엘로운 프로젝트 썸네일" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-stack">
+              <span class="stack-tag">Cafe24</span>
+            </div>            
+            <h3 class="card-title">ELOW'N</h3>
+            <div class="card-meta">
+              <span>3주</span>
+              <span>기여도 100%</span>
+            </div>
+            <a href="https://ecudemo350386.cafe24.com/" class="card-link" target="_blank" >View Project <span class="card-link-arrow">→</span></a>
+          </div>
+        </article>
+
+        <!-- 카드 8 -->
+        <article class="project-card">
+          <div class="card-thumb">
+            <img src="project-img08.png" alt="마리마켓 프로젝트 썸네일" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-stack">
+              <span class="stack-tag">Cafe24</span>
+            </div>            
+            <h3 class="card-title">MARIE MARKET</h3>
+            <div class="card-meta">
+              <span>3주</span>
+              <span>기여도 100%</span>
+            </div>
+            <a href="https://ecudemo353275.cafe24.com/" class="card-link" target="_blank" >View Project <span class="card-link-arrow">→</span></a>
+          </div>
+        </article>
+
+        <!-- 카드 9 -->
+        <article class="project-card">
+          <div class="card-thumb">
+            <img src="project-img09.png" alt="알비 프로젝트 썸네일" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-stack">
+              <span class="stack-tag">Cafe24</span>
+            </div>            
+            <h3 class="card-title">RBee</h3>
+            <div class="card-meta">
+              <span>3주</span>
+              <span>기여도 100%</span>
+            </div>
+            <a href="https://ecudemo340085.cafe24.com/" class="card-link" target="_blank" >View Project <span class="card-link-arrow">→</span></a>
+          </div>
+        </article>
+
+      </div><!-- /.cards-track -->
+    </div><!-- /.projects-pin-wrapper -->
+  </section>
+
+
+  <!-- =============================================
+       섹션 5: CONTACT (엔딩 섹션)
+       - 무한 마퀴 배경 텍스트
+       - 이메일 자석 효과 + 밑줄 드로우
+       - 소셜 링크 스태거 페이드인
+       ============================================= -->
+  <section id="contact" aria-label="연락처">
+
+    <!-- 배경: 무한 마퀴 텍스트 레이어 (순수 CSS 애니메이션 · seamless) -->
+    <!-- 각 행의 .marquee-track 안에 동일 콘텐츠 세트를 2벌 이어 붙여
+         translateX(-50%)까지 흐르게 하여 끊김 없이 반복됩니다. -->
+    <div class="marquee-wrapper" aria-hidden="true">
+
+      <!-- row 1 ─ 왼쪽으로 -->
+      <div class="marquee-row">
+        <div class="marquee-track marquee-track--left">
+          <span class="marquee-text">LET'S CREATE SOMETHING GREAT</span>
+          <span class="marquee-text">LET'S CREATE SOMETHING GREAT</span>
+          <span class="marquee-text">LET'S CREATE SOMETHING GREAT</span>
+          <span class="marquee-text">LET'S CREATE SOMETHING GREAT</span>
+                    <span class="marquee-text">LET'S CREATE SOMETHING GREAT</span>
+          <span class="marquee-text">LET'S CREATE SOMETHING GREAT</span>
+          <span class="marquee-text">LET'S CREATE SOMETHING GREAT</span>
+          <span class="marquee-text">LET'S CREATE SOMETHING GREAT</span>
+        </div>
+      </div>
+
+      <!-- row 2 ─ 오른쪽으로 -->
+      <div class="marquee-row">
+        <div class="marquee-track marquee-track--right">
+          <span class="marquee-text">OPEN FOR COLLABORATION</span>
+          <span class="marquee-text">OPEN FOR COLLABORATION</span>
+          <span class="marquee-text">OPEN FOR COLLABORATION</span>
+          <span class="marquee-text">OPEN FOR COLLABORATION</span>
+                    <span class="marquee-text">OPEN FOR COLLABORATION</span>
+          <span class="marquee-text">OPEN FOR COLLABORATION</span>
+          <span class="marquee-text">OPEN FOR COLLABORATION</span>
+          <span class="marquee-text">OPEN FOR COLLABORATION</span>
+        </div>
+      </div>
+
+      <!-- row 3 ─ 왼쪽으로 -->
+      <div class="marquee-row">
+        <div class="marquee-track marquee-track--left">
+          <span class="marquee-text">AVAILABLE FOR NEW PROJECTS</span>
+          <span class="marquee-text">AVAILABLE FOR NEW PROJECTS</span>
+          <span class="marquee-text">AVAILABLE FOR NEW PROJECTS</span>
+          <span class="marquee-text">AVAILABLE FOR NEW PROJECTS</span>
+                    <span class="marquee-text">AVAILABLE FOR NEW PROJECTS</span>
+          <span class="marquee-text">AVAILABLE FOR NEW PROJECTS</span>
+          <span class="marquee-text">AVAILABLE FOR NEW PROJECTS</span>
+          <span class="marquee-text">AVAILABLE FOR NEW PROJECTS</span>
+        </div>
+      </div>
+
+      <!-- row 4 ─ 오른쪽으로 -->
+      <div class="marquee-row">
+        <div class="marquee-track marquee-track--right">
+          <span class="marquee-text">GET IN TOUCH</span>
+          <span class="marquee-text">GET IN TOUCH</span>
+          <span class="marquee-text">GET IN TOUCH</span>
+          <span class="marquee-text">GET IN TOUCH</span>
+                    <span class="marquee-text">GET IN TOUCH</span>
+          <span class="marquee-text">GET IN TOUCH</span>
+          <span class="marquee-text">GET IN TOUCH</span>
+          <span class="marquee-text">GET IN TOUCH</span>
+        </div>
+      </div>
+
+      <!-- row 5 ─ 왼쪽으로 -->
+      <div class="marquee-row">
+        <div class="marquee-track marquee-track--left">
+          <span class="marquee-text">SAY HELLO</span>
+          <span class="marquee-text">SAY HELLO</span>
+          <span class="marquee-text">SAY HELLO</span>
+          <span class="marquee-text">SAY HELLO</span>
+                    <span class="marquee-text">SAY HELLO</span>
+          <span class="marquee-text">SAY HELLO</span>
+          <span class="marquee-text">SAY HELLO</span>
+          <span class="marquee-text">SAY HELLO</span>
+        </div>
+      </div>
+
+      <!-- row 6 ─ 오른쪽으로 -->
+      <div class="marquee-row">
+        <div class="marquee-track marquee-track--right">
+          <span class="marquee-text">LET'S WORK TOGETHER</span>
+          <span class="marquee-text">LET'S WORK TOGETHER</span>
+          <span class="marquee-text">LET'S WORK TOGETHER</span>
+          <span class="marquee-text">LET'S WORK TOGETHER</span>
+                    <span class="marquee-text">LET'S WORK TOGETHER</span>
+          <span class="marquee-text">LET'S WORK TOGETHER</span>
+          <span class="marquee-text">LET'S WORK TOGETHER</span>
+          <span class="marquee-text">LET'S WORK TOGETHER</span>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- 콘텐츠 영역 -->
+    <div class="contact-inner">
+      <h2 class="contact-headline" id="contactHeadline">
+        <span class="ch-mask"><span class="ch-line">LET'S</span></span>
+        <span class="ch-mask"><span class="ch-line">WORK</span></span>
+        <span class="ch-mask"><span class="ch-line">TOGETHER</span></span>
+      </h2>
+      <div class="contact-divider" id="contactDivider"></div>
+
+      <!-- 이메일 자석 링크 -->
+      <a href="mailto:dbflwjddus@naver.com"
+         class="email-magnetic"
+         id="emailLink"
+         data-magnetic>
+        dbflwjddus@naver.com
+      </a>
+
+    </div>
+
+    <!-- 카피라이트 푸터 -->
+    <p class="contact-footer">© 2026 Jeong Yeon Kim — Creative Publisher</p>
+
+  </section>
+
+
+  <!-- =============================================
+       라이브러리 & 스크립트 로드 (body 최하단)
+       GSAP CDN → ScrollTrigger CDN → 커스텀 JS
+       ============================================= -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="main.js"></script>
+
+</body>
+</html>
