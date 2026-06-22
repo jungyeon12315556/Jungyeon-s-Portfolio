@@ -5,7 +5,7 @@
      0. GSAP 플러그인 등록
      1. 커스텀 커서
      2. INTRO 애니메이션 (단일 슬롯 단어 교체)
-     3. MAIN 섹션 (타이틀 플립 + 배경 이미지 페이드인)  ← 핀/수렴 제거
+     3. MAIN 섹션 (타이틀 플립 + 이름/중앙 이미지 페이드인)  ← 핀/수렴 제거
      4. ABOUT 섹션 (가로 슬라이드 · containerAnimation)
      5. PROJECTS 섹션 (카드 트랙 · 단일 타임라인 패럴랙스)
      6. CONTACT 섹션 (마퀴 · 자석 · 페이드인)
@@ -47,14 +47,14 @@ gsap.registerPlugin(ScrollTrigger);
 
   document.addEventListener('mouseover', e => {
     if (isInteractive(e.target)) {
-      gsap.to(cursor,   { scale: 2.8, duration: 0.3 });
-      gsap.to(follower, { scale: 1.6, opacity: 0.25, duration: 0.3 });
+      gsap.to(cursor,   { scale: 2.4, duration: 0.3 });
+      gsap.to(follower, { scale: 1.4, opacity: 0.4, backgroundColor: 'rgba(154, 0, 2, 0.12)', duration: 0.3 });
     }
   });
   document.addEventListener('mouseout', e => {
     if (isInteractive(e.target)) {
       gsap.to(cursor,   { scale: 1, duration: 0.3 });
-      gsap.to(follower, { scale: 1, opacity: 0.55, duration: 0.3 });
+      gsap.to(follower, { scale: 1, opacity: 0.7, backgroundColor: 'rgba(154, 0, 2, 0)', duration: 0.3 });
     }
   });
 })();
@@ -119,11 +119,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 /* =============================================================
    3. MAIN 섹션 — 히어로 리빌 (핀/수렴 제거)
-      ① CREATIVE PUBLISHER → 글자 단위 플립 구조 생성 + 등장 모션
-      ② 배경 이미지 페이드인
-      ③ 이름 페이드인
-      ④ 각 글자 hover 플립
-      ⑤ 스크롤 섹션 초기화 + ScrollTrigger.refresh()
+      ① CREATIVE PUBLISHER → 글자 단위 플립 구조 생성
+      ② 등장 타임라인 (글자 플립 → 타이틀 상승 → 이름 페이드인 → 중앙 이미지 슬라이드업)
+      ③ 각 글자 hover 플립
+      ④ 스크롤 섹션 초기화 + ScrollTrigger.refresh()
    ============================================================= */
 function initMain() {
 
@@ -150,7 +149,7 @@ function initMain() {
   titleEl.innerHTML = innerHTML;
   titleEl.setAttribute('aria-label', fullText);
 
-  /* ② 등장 타임라인: 글자 플립 → 배경 페이드인 → 이름/이미지 페이드인 */
+  /* ② 등장 타임라인: 글자 플립 → 타이틀 상승 → 이름 페이드인 → 중앙 이미지 슬라이드업 */
   const flipInners = document.querySelectorAll('.letter-flip-inner');
 
   /* 중앙 이미지: 수평 정중앙(translateX -50%)을 xPercent로 고정 →
@@ -172,7 +171,7 @@ function initMain() {
       { opacity: 1, y: 0, duration: 0.95, ease: 'back.out(1.5)' },
       '-=0.45');
 
-  /* ④ 글자 플립 hover */
+  /* ③ 글자 플립 hover */
   document.querySelectorAll('.letter-flip').forEach(flipEl => {
     const inner = flipEl.querySelector('.letter-flip-inner');
     flipEl.addEventListener('mouseenter', () => {
@@ -183,7 +182,7 @@ function initMain() {
     });
   });
 
-  /* ⑤ 스크롤 섹션 초기화 (DOM 순서대로 → 핀 스페이서 계산 안정) */
+  /* ④ 스크롤 섹션 초기화 (DOM 순서대로 → 핀 스페이서 계산 안정) */
   initAbout();
   initProjects();
   initContact();
@@ -226,7 +225,7 @@ function initAbout() {
      ① 데코 순차 등장 → tl 먼저 스르륵, 이어서 br (가로 이동 전 초반 구간)
      ② 트랙 가로 이동 (반드시 ease:'none')
      · end 를 가로 이동 거리보다 약 1.33배로 잡아, 앞쪽 1/4 구간을
-       데코 등장에 할당하고 나머지 구간에서 트랙이 우측으로 흐름     */
+       데코 등장에 할당하고 나머지 구간에서 트랙이 좌측으로 이동(다음 패널 노출) */
   const aboutScroll = gsap.timeline({
     scrollTrigger: {
       trigger:            '#about',
@@ -306,7 +305,7 @@ function initContact() {
   /* ① 무한 마퀴 — 순수 CSS @keyframes 로 처리 (JS transform 갱신 제거) */
   /*    seamless 반복 + will-change 최적화는 style.css 의 .marquee-track 참고 */
 
-  /* ② contact-headline — 줄 단위 마스크 상승 등장 (IntersectionObserver) */
+  /* ② contact-headline — 줄 단위 좌/우 슬라이드 등장 (IntersectionObserver로 .is-visible 부여) */
   const headline = document.getElementById('contactHeadline');
   if (headline) {
     const headlineObserver = new IntersectionObserver((entries, obs) => {
@@ -334,7 +333,7 @@ function initContact() {
     scrollTrigger: { trigger: '#contact', start: 'top 55%', toggleActions: 'play none none reverse' }
   });
 
-  /* ③ 자석(Magnetic) 호버 */
+  /* ④ 자석(Magnetic) 호버 */
   document.querySelectorAll('[data-magnetic]').forEach(el => {
     el.addEventListener('mousemove', e => {
       const rect = el.getBoundingClientRect();
