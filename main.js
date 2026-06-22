@@ -22,6 +22,7 @@ gsap.registerPlugin(ScrollTrigger);
    1. 커스텀 마우스 커서
    ============================================================= */
 (function initCursor() {
+   if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
   const cursor   = document.getElementById('cursor');
   const follower = document.getElementById('cursor-follower');
   let mouseX = 0, mouseY = 0;

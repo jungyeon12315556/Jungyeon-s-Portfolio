@@ -283,3 +283,10 @@ img {
   .contact-headline { font-size: clamp(2.5rem, 12vw, 5rem); }
   .center-image { width: clamp(318px, 85vw, 450px); }
 }
+
+/* 모바일·터치 기기: 커스텀 커서 숨기고 기본 커서 복원 */
+@media (hover: none), (pointer: coarse) {
+  body { cursor: auto; }
+  #cursor,
+  #cursor-follower { display: none; }
+}
